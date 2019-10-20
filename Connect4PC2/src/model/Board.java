@@ -1,5 +1,7 @@
 package model;
-
+/**
+ * @author Pietari Järvi, Kim Widberg, Olli Kaivola, Jetro Saarti
+ */
 public class Board {
 	private int[][] grid;
 	
