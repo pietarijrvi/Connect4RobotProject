@@ -28,6 +28,8 @@ public class GameLogic {
 	// Has the robot received a drop point from PC (received once per turn)
 	private boolean dropPointReceived = false;
 
+	private Point calculatedDropPoint = null;
+
 	// Has the robot dropped its game piece (dropped once per turn)
 	private boolean hasDroppedPiece = true;
 
