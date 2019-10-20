@@ -58,6 +58,30 @@ public class GameLogic {
 	public void setDropPointReceived(boolean dropPointReceived) {
 		this.dropPointReceived = dropPointReceived;
 	}
+	
+	/**
+	 * Returns calculated drop point
+	 * @return calculatedDropPoint
+	 */
+	public Point getCalculatedDropPoint() {
+		return calculatedDropPoint;
+	}
+	
+	/**
+	 * returns path to calculated point
+	 * @return p - coordinates to calculated point
+	 */
+	public Point getPathToCalculatedPoint() {
+		Point p = null;
+		try {
+			int x = calculatedDropPoint.x - currentLocation.x;
+			int y = calculatedDropPoint.y - currentLocation.y;
+			p = new Point(x, y);
+		} catch (Exception e) {
+			System.out.println("getCalculatedMove() KABOOM");
+		}
+		return p;
+	}
 
 	/**
 	 * Returns the last player move
