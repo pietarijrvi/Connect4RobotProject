@@ -72,7 +72,7 @@ public class CommunicatorTask extends Task<Void> {
 	}
 	
 	/**
-	 * Checks if the gameboard has a win
+	 * Checks if the gameboard has a win and prints the winner
 	 */
 	private void checkWinner() {
 		int winner = determinator.checkWins();
