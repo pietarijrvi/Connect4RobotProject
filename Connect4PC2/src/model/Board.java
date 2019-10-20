@@ -14,6 +14,7 @@ public class Board {
 	
 	/**
 	 * Returns free spaces on the board
+	 * @return indexes - indexes of free spaces on board
 	 */
 	public int[] getNextFreeSpaces() {
 		int[] indexes = new int[7];
