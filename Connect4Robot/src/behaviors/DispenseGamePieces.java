@@ -9,6 +9,12 @@ import sensors.ColorTester;
 import sensors.TouchSensor;
 import util.Point;
 
+/**
+ * 
+ * 
+ * @author Kim, Jetro, Pietari, Olli
+ *
+ */
 public class DispenseGamePieces implements Behavior {
     private volatile boolean suppressed = false;
 	private PieceXYReadMove pieceXYReadMove;
