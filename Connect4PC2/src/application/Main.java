@@ -12,8 +12,8 @@ import model.CommunicatorTask;
 import view.GameOverviewController;
 
 /**
-* @author Pietari Järvi, Jetro Saarti, Kim Widberg, Olli Kaivola
-*/
+ * @author Pietari Järvi, Jetro Saarti, Kim Widberg, Olli Kaivola
+ */
 public class Main extends Application {
 	private Stage primaryStage;
 	private AnchorPane gameOverview;
