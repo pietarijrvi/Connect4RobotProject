@@ -110,7 +110,7 @@ public class GameOverviewController {
 	}
 
 	/**
-	 * Resets the game UI
+	 * Resets the game UI when button is pressed
 	 */
 	@FXML
 	private void reset() {
