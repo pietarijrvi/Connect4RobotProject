@@ -28,7 +28,7 @@ public class DispenseGamePieces implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		if (gameLogic.getIsRobotsTurn() && gameLogic.getCalculatedDropPoint() != null)
+		if (gameLogic.getIsRobotsTurn() && gameLogic.getCalculatedMove() != null)
 			return true;
 		return false;
 	}
