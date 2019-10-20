@@ -1,0 +1,36 @@
+package behaviors;
+
+import connect4.Communication;
+import connect4.GameLogic;
+import lejos.robotics.subsumption.Behavior;
+import util.Point;
+
+public class SendPlayerMoveToPC implements Behavior {
+	private Communication comm = new Communication();
+	private GameLogic gameLogic;
+
+	public SendPlayerMoveToPC(GameLogic gameLogic, Communication comm) {
+		this.gameLogic = gameLogic;
+		this.comm = comm;
+	}
+
+	@Override
+	public boolean takeControl() {
+		if (gameLogic.getGameBoardReadComplete() && gameLogic.getPlayerMove() != null) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void action() {
+		Point point = gameLogic.getPlayerMove();
+		comm.sendDropPoint(point);
+	}
+
+	@Override
+	public void suppress() {
+
+	}
+
+}

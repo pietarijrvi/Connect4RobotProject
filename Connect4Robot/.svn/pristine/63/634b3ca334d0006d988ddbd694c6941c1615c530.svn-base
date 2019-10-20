@@ -1,0 +1,135 @@
+package sensors;
+
+import lejos.hardware.Button;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.SensorModes;
+import lejos.robotics.SampleProvider;
+import lejos.hardware.port.Port;
+
+/**
+ * For color calibration and testing
+ * 
+ * @author Kim, Jetro, Pietari
+ *
+ */
+public class ColorTester {
+	private SensorModes colorSensor;
+	private SampleProvider colorProvider;
+	private float[] colorSample;
+	
+	// An array for the calibrated colors
+	private float[][] colors = new float[3][3];
+	
+	public static final int COLOR_BOARD = 0;
+	public static final int COLOR_PLAYERPIECE = 1;
+    public static final int COLOR_ROBOTPIECE = 2;
+
+	/**
+	 * Saves the gameboard color so it can be compared to the color fetched in
+	 * colorTest along with the line color
+	 * 
+	 * @param gameboardColor
+	 */
+	private void calibrateGameboardColor(float[] gameboardColor) {
+		// Clones the array so that the calibrated color wont change with the given
+		// array
+		colors[COLOR_BOARD] = gameboardColor.clone();
+		System.out.println("- ok");
+	}
+
+	/**
+	 * Saves the line color so it can be compared to the color fetched in colorTest
+	 * along with the floor color
+	 * 
+	 * @param playerPiece
+	 */
+	private void calibratePlayerPieceColor(float[] playerPiece) {
+		// Clones the array so that the calibrated color wont change with the given
+		// array
+		colors[COLOR_PLAYERPIECE] = playerPiece.clone();
+		System.out.println("- ok");
+	}
+
+	/**
+	 * Saves the line color so it can be compared to the color fetched in colorTest
+	 * along with the floor color
+	 * 
+	 * @param playerPiece
+	 */
+	private void calibrateRobotPieceColor(float[] robotPiece) {
+		// Clones the array so that the calibrated color wont change with the given
+		// array
+		colors[COLOR_ROBOTPIECE] = robotPiece.clone();
+		System.out.println("- ok");
+	}
+
+	public ColorTester(Port colorPort) {
+		// Setting up the color sensor for use
+		colorSensor = new EV3ColorSensor(colorPort);
+		colorProvider = ((EV3ColorSensor) colorSensor).getRGBMode();
+		colorSample = new float[colorProvider.sampleSize()];
+	}
+
+	/**
+	 * Runs the calibration sequence for the color sensor
+	 */
+	public void startCalibration() {
+		// After the button is pressed takes the current color the sensor sees and
+		// calls the calibration method for the floor
+		System.out.print("Calibrate gameboard color ");
+		Button.ENTER.waitForPressAndRelease();
+		colorProvider.fetchSample(colorSample, 0);
+		calibrateGameboardColor(colorSample);
+
+		// After the button is pressed takes the current color the sensor sees and
+		// calls the calibration method for the player piece
+		System.out.print("Calibrate player piece color ");
+		Button.ENTER.waitForPressAndRelease();
+		colorProvider.fetchSample(colorSample, 0);
+		calibratePlayerPieceColor(colorSample);
+
+		// After the button is pressed takes the current color the sensor sees and
+		// calls the calibration method for the robot piece
+		System.out.print("Calibrate robot piece color ");
+		Button.ENTER.waitForPressAndRelease();
+		colorProvider.fetchSample(colorSample, 0);
+		calibrateRobotPieceColor(colorSample);
+	}
+
+	/**
+	 * Compares the given color to the 3 colors given during calibration.
+	 * 
+	 * @return integer, either 0 indicating that the color fetched is closer to the
+	 *         gameboard color and 1 indicating it was closer to the player piece color and 2 indicating it was closer to the robot piece color
+	 */
+	public int testColor() {
+		colorProvider.fetchSample(colorSample, 0);
+
+		// Arrays needed to save intermediate values
+		float[] results = new float[3];
+		double[] endResults = new double[3];
+
+		// Repeats for every color value in each calibrated color
+		for (int i = 0; i < colors.length; i++) {
+			for (int n = 0; n < colors[i].length; n++) {
+				// Calculations for checking which color is the closest
+				results[n] = colorSample[n] - colors[i][n];
+				results[n] *= results[n];
+			}
+			endResults[i] = Math.sqrt(results[0] + results[1] + results[2]);
+		}
+
+		int closest = 0;
+
+		// Checks which one of the colors was the closest and returns the index
+		// indicating it
+		for (int i = 1; i < endResults.length; i++) {
+
+			if (endResults[i] < endResults[closest]) {
+				closest = i;
+			}
+		}
+
+		return closest;
+	}
+}

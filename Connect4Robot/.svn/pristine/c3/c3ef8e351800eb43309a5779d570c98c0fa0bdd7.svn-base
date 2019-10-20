@@ -1,0 +1,23 @@
+package sensors;
+
+import lejos.hardware.port.Port;
+import lejos.hardware.sensor.EV3TouchSensor;
+
+public class TouchSensor {
+	private EV3TouchSensor touchSensor;
+	
+	public TouchSensor(Port touchSensorPort) {
+		touchSensor = new EV3TouchSensor(touchSensorPort);
+	}
+
+	public boolean isButtonPressed() {
+		float[] touchSample = {0};
+		touchSensor.getTouchMode().fetchSample(touchSample, 0);
+		
+		if (touchSample[0] != 0) {
+			return true;
+		}
+		return false;
+	}
+	
+}

@@ -1,0 +1,68 @@
+package connect4;
+
+
+import lejos.hardware.device.DeviceIdentifier;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.Port;
+import lejos.robotics.RegulatedMotor;
+
+/**
+ * Class that controls the motor functions; moving, turning and stopping the
+ * motors.
+ * 
+ * @author jetro, kim, pietari, olli
+ *
+ */
+public class Movement {
+	private RegulatedMotor motor;
+	private Port motorPort; // left motor port
+	private boolean movingForward = true; // true when the robot is currently moving forward
+
+	public Movement(Port motorPort) {
+		this.motorPort = motorPort;
+		this.motor = new EV3LargeRegulatedMotor(motorPort);
+	}
+
+	public void move(int motorSpeed, boolean changeDirection) {
+		motor.setSpeed(motorSpeed);
+		if (changeDirection) {
+			movingForward = !movingForward;
+		}
+		if (movingForward) {
+			motor.forward();
+		} else {
+			motor.backward();
+		}
+	}
+
+	/**
+	 * Stops motor
+	 */
+	public void stop() {
+		motor.stop();
+	}
+
+	/**
+	 * Checks if DeviceIdentifier detects motor is connected to port.
+	 * 
+	 * @return true if motor port is connected
+	 */
+	public boolean testMotorPorts() {
+		// Message that is returned if no motors are connected to ports
+		String message = "NONE:NONE";
+		// Closing motors so DeviceIdentifier can access the ports
+		motor.close();
+		DeviceIdentifier motorID1 = new DeviceIdentifier(motorPort);
+		boolean testOk = false;
+
+		if (motorID1.getDeviceSignature(false).equals(message)) {
+			System.out.print("not connected");
+		} else {
+			testOk = true;
+		}
+		motorID1.close();
+		// Reopening motors for movement
+		motor = new EV3LargeRegulatedMotor(motorPort);
+		return testOk;
+	}
+}

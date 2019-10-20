@@ -1,0 +1,51 @@
+package behaviors;
+
+import connect4.MotorFunctions;
+import lejos.robotics.subsumption.Behavior;
+
+/**
+ * 
+ * @author jetro, kim, pietari, olli
+ *
+ */
+public class DriveForward implements Behavior {
+	private volatile boolean suppressed = false;
+	private MotorFunctions motorFunctions; // movement reference (motor functions)
+
+	public DriveForward(MotorFunctions motorFunctions) {
+		this.motorFunctions = motorFunctions;
+	}
+
+	/**
+	 *
+	 */
+	@Override
+	public boolean takeControl() {
+		return false;
+	}
+
+	/**
+	 * The robot drives forward (left and right motors) and stops the motor when
+	 * suppressed
+	 */
+	@Override
+	public void action() {
+		System.out.println("Moving forward");
+		suppressed = false;
+
+		/*
+		 * robot moves forward (predefined speed) until the behavior is suppressed and
+		 * then stops the motors
+		 */
+		motorFunctions.rotateMovementMotor(300, false);
+		while (!suppressed)
+			Thread.yield();
+		motorFunctions.stopMovement();
+	}
+
+	@Override
+	public void suppress() {
+		suppressed = true;
+	}
+
+}

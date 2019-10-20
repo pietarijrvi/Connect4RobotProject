@@ -1,0 +1,32 @@
+package behaviors;
+
+import connect4.Movement;
+import lejos.robotics.subsumption.Behavior;
+import sensors.ColorTester;
+
+public class ReadGamePieces implements Behavior {
+
+	private ColorTester colorCalibrator;
+	private Movement movement;
+
+	public ReadGamePieces(ColorTester colorCalibrator, Movement movement) {
+		this.colorCalibrator = colorCalibrator;
+		this.movement = movement;
+	}
+
+	@Override
+	public boolean takeControl() {
+		return false;
+	}
+
+	@Override
+	public void action() {
+		
+	}
+
+	@Override
+	public void suppress() {
+		
+	}
+	
+}

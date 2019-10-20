@@ -1,0 +1,95 @@
+package view;
+
+import application.Main;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import model.Determinator;
+import util.Point;
+
+public class GameOverviewController {
+
+	private int i;
+	private boolean playersTurn;
+	private Determinator deter;
+
+	@FXML
+	private GridPane pane;
+
+	@FXML
+	private Circle circle;
+
+	@FXML
+	private TextField turns;
+
+	@FXML
+	private Button resetButton;
+
+	@FXML
+	private TextField currentTurn;
+
+	/**
+	 * The constructor. The constructor is called before the initialize() method.
+	 */
+	public GameOverviewController() {
+
+	}
+
+	/**
+	 * Initializes the controller class. This method is automatically called after
+	 * the fxml file has been loaded.
+	 */
+	@FXML
+	private void initialize() {
+		currentTurn.setText("Player");
+	}
+
+	private void addGamePiece(Point point) {
+		int x = point.x;
+		int y = point.y;
+		
+		Circle circle = new Circle();
+		pane.add(circle, x, y);
+		circle.setCenterX(100.0f);
+		circle.setCenterY(100.0f);
+		circle.setRadius(40.0f);
+		if (playersTurn) {
+			circle.setFill(Paint.valueOf("DODGERBLUE"));
+		} else {
+			circle.setFill(Paint.valueOf("YELLOW"));
+		}
+		GridPane.setFillWidth(circle, true);
+		GridPane.setFillHeight(circle, true);
+		System.out.println("added");
+		i++;
+	}
+
+	@FXML
+	private void changeTurn() {
+		if (playersTurn) {
+			playersTurn = false;
+			currentTurn.setText("Robot");
+		} else {
+			playersTurn = true;
+			currentTurn.setText("Player");
+		}
+	}
+
+	@FXML
+	private void reset() {
+		Node node = pane.getChildren().get(0);
+		pane.getChildren().clear();
+		pane.getChildren().add(0, node);
+		i = 0;
+		turns.setText("" + i);
+		playersTurn = true;
+	}
+
+	public void setMainApp(Main main) {
+
+	}
+}

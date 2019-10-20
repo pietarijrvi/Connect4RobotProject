@@ -1,0 +1,33 @@
+package behaviors;
+
+import connect4.MotorFunctions;
+import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
+
+public class DispenseGamePieces implements Behavior {
+	private volatile boolean suppressed = false;
+	private MotorFunctions motorFunctions; // movement reference (motor functions)
+	
+	@Override
+	public boolean takeControl() {
+		return false;
+	}
+
+	@Override
+	public void action() {
+
+		suppressed = false;
+		motorFunctions.rotateDispenserMotor(10, true);
+		Delay.msDelay(1000);
+		motorFunctions.stopDispenser();
+		
+		
+	}
+
+	@Override
+	public void suppress() {
+		suppressed = true;
+		
+	}
+
+}

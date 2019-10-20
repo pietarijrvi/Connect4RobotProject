@@ -1,0 +1,58 @@
+package connect4;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import lejos.hardware.Sound;
+
+
+/**
+ * Class contains methods for controlling the data streams (sending and
+ * receiving data) between the robot and PC (robot side)
+ * 
+ * @author Pietari Järvi, Olli Kaivola, Jetro Saarti, Kim Widberg
+ *
+ */
+public class Communication {
+
+	private ServerSocket serveri;
+	private Socket s;
+	private DataInputStream in = null;
+	private DataOutputStream out = null;
+	private ObjectOutputStream oos = null;
+
+	/**
+	 * Opens server socket connection and data streams and waits for the PC to
+	 * connect
+	 */
+	public void openConnection() {
+		try {
+			serveri = new ServerSocket(1111);
+			System.out.println("waiting for connection");
+			Sound.beep();
+			s = serveri.accept();
+			in = new DataInputStream(s.getInputStream());
+			out = new DataOutputStream(s.getOutputStream());
+			oos = new ObjectOutputStream(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("CONNECTED");
+	}
+
+	/**
+	 * Waits for the start command from PC
+	 */
+	public void waitForGoCommand() {
+		try {
+			in.readInt();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

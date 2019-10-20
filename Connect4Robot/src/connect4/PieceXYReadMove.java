@@ -1,0 +1,137 @@
+package connect4;
+
+import lejos.hardware.Sound;
+import lejos.utility.Delay;
+import sensors.ColorTester;
+import util.Point;
+
+public class PieceXYReadMove {
+
+	private MotorFunctions motorFunctions;
+	private GameLogic gameLogic;
+	ColorTester colorTester;
+
+	public PieceXYReadMove(MotorFunctions motorFunctions, GameLogic gameLogic, ColorTester colorTester) {
+		this.motorFunctions = motorFunctions;
+		this.gameLogic = gameLogic;
+		this.colorTester = colorTester;
+	}
+
+	public int moveSensor(Point steps) {
+		int sensorMotorSpeed = 30;
+		int movementSpeed = 70;
+
+		// tarkistetaan x-liikkumissuunta
+		boolean xDirectionForward = true;
+		if (steps.x > 0) {
+			xDirectionForward = true;
+		} else {
+			xDirectionForward = false;
+		}
+		// x-suunnassa liikkuminen (pyörät)
+		motorFunctions.rotateMovementMotor(movementSpeed, xDirectionForward);
+
+		int lastColor = colorTester.testColor(); // edellinen väri, johon uutta tunnistettua väriä verrataan (toiminto
+													// värin vaihtuessa)
+		for (int i = 0; i < Math.abs(steps.x); i++) {
+			// luetaan väriä, kunnes tunnistetaan uusi väri
+			boolean foundNewSlot = false;
+			while (!foundNewSlot) {
+				int color = colorTester.testColor();
+				if (color != lastColor) {
+					switch (color) {
+					case ColorTester.COLOR_BOARD:
+						lastColor = color; // laudan tunnistuksessa tallennetaan tieto värimuutoksesta ja jatketaan
+						System.out.println("tunnistettu pelilauta");
+						break;
+					case ColorTester.COLOR_PLAYERPIECE:
+					case ColorTester.COLOR_ROBOTPIECE:
+					case ColorTester.COLOR_EMPTY:
+						//vältetään mahdollisia virhetunnistuksia
+						if(lastColor!=ColorTester.COLOR_BOARD) {
+							break;
+						}
+						lastColor = color;
+						//Sound.beep(); // piippaa, kun tunnistetaan uusi väri
+						System.out.println("Tunnistettu vari: " + color);
+
+						Delay.msDelay(300);
+						foundNewSlot = true;
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
+		motorFunctions.stopMovement(); // pysähdytään, kun saavutettu kohdepiste
+
+		// tarkistetaan y-liikkumissuunta
+		boolean yDirectionUp = true;
+		if (steps.y > 0) {
+			yDirectionUp = true;
+		} else {
+			yDirectionUp = false;
+		}
+		
+//		int degreesPerYSlot = 36;
+//		int angle = steps.y * degreesPerYSlot;
+//		motorFunctions.rotateDegreesLifterMotor(angle);
+		
+		
+		motorFunctions.rotateLifterMotor(sensorMotorSpeed, yDirectionUp);
+
+		for (int i = 0; i < Math.abs(steps.y); i++) {
+			// luetaan väriä, kunnes tunnistetaan uusi väri
+			boolean foundNewSlot = false;
+			while (!foundNewSlot) {
+				int color = colorTester.testColor();
+				if (color != lastColor) {
+					switch (color) {
+					case ColorTester.COLOR_BOARD:
+						lastColor = color; // laudan tunnistuksessa tallennetaan tieto värimuutoksesta ja jatketaan
+						System.out.println("tunnistettu pelilauta");
+						break;
+					case ColorTester.COLOR_PLAYERPIECE:
+					case ColorTester.COLOR_ROBOTPIECE:
+					case ColorTester.COLOR_EMPTY:
+						//vältetään mahdollisia virhetunnistuksia
+						if(lastColor!=ColorTester.COLOR_BOARD) {
+							break;
+						}
+						lastColor = color;
+						//Sound.beep(); // piippaa, kun tunnistetaan uusi väri
+						System.out.println("Tunnistettu vari: " + color);
+
+						foundNewSlot = true;
+						Delay.msDelay(280);
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
+		motorFunctions.stopLifter();
+			
+		gameLogic.locationChange(steps);
+
+		return lastColor; // palautetaan viimeisin tunnistettu väri (kohdepiste)
+
+		// luetaan väri -> jos tyhjä, haetaan reitti seuraavaan oletettuun tyhjään ->
+		// kun löydetään muu kuin tyhjä, lopetetaan haku -> välitetään tieto
+		// gameLogicille
+		// -> gameLogic tallentaa nappulan värin -> lähetetään tieto tietokoneelle, joka
+		// laskee siirron
+
+		// robotin vuoron lopussa nappulan pudotuksen jälkeen luetaan pudotuskohdassa
+		// ylin tyhjänä ollut slotti
+		// (pudotuspaikka), tarkistetaan, onko nappula pudonnut, vai onko edelleen tyhjä
+
+		/*
+		 * jos stepit miinuksella, moottorin pyörintäsuunta sn mukaan (laskeutuminen) if
+		 * (steps.y < 0) { sensorMotor.backward(); } else { sensorMotor.forward(); }
+		 * 
+		 */
+	}
+}

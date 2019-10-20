@@ -1,0 +1,21 @@
+package model;
+
+public class Tester {
+	public static void main(String[] args) {
+		Board game = new Board();
+		Determinator det = new Determinator(game, 1, 2);
+		
+		game.setPiece(5, 2);
+		game.setPiece(4, 1);
+		game.setPiece(4, 2);
+		game.setPiece(3, 1);
+		game.setPiece(3, 1);
+		game.setPiece(3, 2);
+		game.setPiece(2, 1);
+		game.setPiece(2, 1);
+		game.setPiece(2, 1);
+		game.setPiece(2, 2);
+		
+		System.out.println(det.checkWins());
+	}
+}

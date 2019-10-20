@@ -1,0 +1,68 @@
+package behaviors;
+
+import connect4.Communication;
+import connect4.GameLogic;
+import connect4.MotorFunctions;
+import lejos.robotics.subsumption.Behavior;
+import sensors.TouchSensor;
+import util.Point;
+
+public class ReturnToStart implements Behavior {
+
+	private volatile boolean suppressed = false;
+	private MotorFunctions motorFunctions;
+	private TouchSensor startPositionButton;
+	private GameLogic gameLogic;
+	private Communication comm;
+	
+	public ReturnToStart(MotorFunctions motorFunctions, TouchSensor startPositionButton, GameLogic gameLogic, Communication comm) {
+		this.motorFunctions = motorFunctions;
+		this.startPositionButton = startPositionButton;
+		this.gameLogic = gameLogic;
+		this.comm = comm;
+	}
+	
+	@Override
+	public boolean takeControl() {
+		if(gameLogic.getHasDroppedPiece())
+			return true;
+		return false;
+	}
+
+	@Override
+	public void action() {
+		
+		suppressed = false;
+		//Robotti liikkuu aloitusasemaan (x- siirtymä anturiin asti
+		int movementSpeed = 200;
+		while(!suppressed) {
+			motorFunctions.rotateMovementMotor(movementSpeed, false);
+			// TODO: tarkkaillaan nappulanpainallusta, thread
+			while(!startPositionButton.isButtonPressed());
+			motorFunctions.stopMovement();
+			System.out.println("Liikuttu aloituspisteeseen -1");
+			
+			// päivitetään gameLogic sijainti
+			gameLogic.setLocation(new Point(-1,gameLogic.getLocation().y));
+			
+			gameLogic.getHasDroppedPiece();
+			
+			//TODO: poistetaan väliaikaiset testit
+			//	gameLogic.setCalculatedMove(new Point(2,3));
+			//	gameLogic.setIsRobotsTurn(true);
+			
+			// lähetetään tietokoneelle tieto vuoron vaihtumisesta pelaajalle
+			comm.sendTurnChange();
+			//gameLogic.setIsRobotsTurn(false);
+			
+			suppressed = true;
+		}
+	}
+
+	@Override
+	public void suppress() {
+		suppressed = true;
+
+	}
+
+}

@@ -1,0 +1,74 @@
+package connect4;
+
+import java.awt.Point;
+import java.util.Arrays;
+
+public class GameLogic {
+	int columns = 7;
+	int rows = 6;
+
+	private int[][] gameGrid;
+
+	private Point currentPos = new Point(0, 0);
+
+	private boolean isRobotsTurn = false; // Player's turn by default
+	private boolean gameBoardReadComplete = false;
+
+	private boolean turnCalculationReceived = false;
+	private boolean hasDroppedPiece = false;
+	
+	public boolean getIsRobotsTurn() {
+		return isRobotsTurn;
+	}
+	
+	public boolean getGameBoardReadComplete() {
+		return gameBoardReadComplete;
+	}
+
+	public GameLogic() {
+		gameGrid = new int[columns][rows];
+		Arrays.fill(gameGrid, 0);
+	}
+
+	public void increaseCurrentVerticalPos() {
+		currentPos.y++;
+	}
+
+	public void decreaseCurrentVerticalPos() {
+		currentPos.y--;
+	}
+
+	public void increaseCurrentHorizontalPos() {
+		currentPos.x++;
+	}
+
+	public void decreaseCurrentHorizontalPos() {
+		currentPos.x--;
+	}
+
+	// etsii seuraavan tyhj�n slotin nykyisest� sijainnista eteenp�in. l�hdett�v�
+	// t�ss� vaiheessa nollasta, eli nollaus ennen t�t�
+	private Point checkNextEmptySlot() {
+		Point nextEmptyPoint = null;
+		for (int i = (int) currentPos.getX(); i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				if (gameGrid[i][j] == 0) {
+					nextEmptyPoint = new Point(i, j);
+				}
+			}
+		}
+		return nextEmptyPoint;
+	}
+	
+	//"askeleet" seuraavaan tarkistettavaan pisteeseen anturin nykyisest� sijainnista
+	public Point stepsToNextEmpty() {
+		Point nextEmpty = checkNextEmptySlot();
+		Point xySteps = new Point();
+		
+		xySteps.x = nextEmpty.x-currentPos.x;
+		xySteps.y = nextEmpty.y-currentPos.y;
+		
+		return xySteps;
+	}
+
+}

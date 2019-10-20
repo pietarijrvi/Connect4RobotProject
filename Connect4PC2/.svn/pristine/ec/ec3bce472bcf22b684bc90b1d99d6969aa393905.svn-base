@@ -1,0 +1,41 @@
+package model;
+
+import util.Point;
+
+public class Tester {
+	public static void main(String[] args) {
+		Board game = new Board();
+		Determinator det = new Determinator(game, 1, 2);
+		
+		for (int i = 0; i < 23; i++) {
+			while(!game.setPiece((int)(Math.random()*7), i%2+1) && !game.isFull());
+		}
+		int[][] grid = game.getGrid();
+		
+		for (int y = 5; y >= 0; y--) {
+			for (int x = 0; x < 7; x++) {
+				System.out.print(grid[x][y] + " ");
+			}
+			System.out.println();
+		}
+		
+		System.out.println(det.checkWins());
+	}
+	
+	public void playSequence(Point playersMove) {
+		Board board = new Board();
+		int bot = 1;
+		int player = 2;
+		Determinator det = new Determinator(board, bot, player);
+		board.setPiece(playersMove.x, player);
+		Point nextMove = det.getNextMove();
+		int winState = det.checkWins();
+		
+		switch(winState) {
+		case 0:
+			
+		}
+		
+		
+	}
+}
