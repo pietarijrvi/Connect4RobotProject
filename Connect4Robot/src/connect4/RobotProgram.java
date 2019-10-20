@@ -18,6 +18,9 @@ import lejos.utility.Delay;
 import sensors.ColorTester;
 import sensors.TouchSensor;
 
+/**
+ * @author Pietari Järvi, Jetro Saarti, Kim Widberg, Olli Kaivola
+ */
 public class RobotProgram {
 
 	public static void main(String[] args) {
