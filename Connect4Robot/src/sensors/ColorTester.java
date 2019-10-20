@@ -16,14 +16,14 @@ public class ColorTester {
 	private SensorModes colorSensor;
 	private SampleProvider colorProvider;
 	private float[] colorSample;
-	
+
 	// An array for the calibrated colors
 	private float[][] colors = new float[4][3];
-	
+
 	public static final int COLOR_BOARD = 0;
 	public static final int COLOR_PLAYERPIECE = 1;
-    public static final int COLOR_ROBOTPIECE = 2;
-    public static final int COLOR_EMPTY = 3;
+	public static final int COLOR_ROBOTPIECE = 2;
+	public static final int COLOR_EMPTY = 3;
 
 	/**
 	 * Saves the gameboard color so it can be compared to the color fetched in
@@ -63,16 +63,25 @@ public class ColorTester {
 		colors[COLOR_ROBOTPIECE] = robotPiece.clone();
 		System.out.println("- ok");
 	}
-	
+
+	/**
+	 * Clones the array so that the calibrated color wont change with the given
+	 * array
+	 * 
+	 * @param robotPiece
+	 */
 	private void calibrateEmptyColor(float[] robotPiece) {
-		// Clones the array so that the calibrated color wont change with the given
-		// array
+
 		colors[COLOR_EMPTY] = robotPiece.clone();
 		System.out.println("- ok");
 	}
 
+	/**
+	 * Setting up the color sensor for use
+	 * 
+	 * @param colorPort
+	 */
 	public ColorTester(Port colorPort) {
-		// Setting up the color sensor for use
 		colorSensor = new EV3ColorSensor(colorPort);
 		colorProvider = ((EV3ColorSensor) colorSensor).getRGBMode();
 		colorSample = new float[colorProvider.sampleSize()];
@@ -102,7 +111,7 @@ public class ColorTester {
 		Button.ENTER.waitForPressAndRelease();
 		colorProvider.fetchSample(colorSample, 0);
 		calibrateRobotPieceColor(colorSample);
-		
+
 		System.out.print("Calibrate empty color ");
 		Button.ENTER.waitForPressAndRelease();
 		colorProvider.fetchSample(colorSample, 0);
@@ -113,7 +122,8 @@ public class ColorTester {
 	 * Compares the given color to the 3 colors given during calibration.
 	 * 
 	 * @return integer, either 0 indicating that the color fetched is closer to the
-	 *         gameboard color and 1 indicating it was closer to the player piece color and 2 indicating it was closer to the robot piece color
+	 *         gameboard color and 1 indicating it was closer to the player piece
+	 *         color and 2 indicating it was closer to the robot piece color
 	 */
 	public int testColor() {
 		colorProvider.fetchSample(colorSample, 0);

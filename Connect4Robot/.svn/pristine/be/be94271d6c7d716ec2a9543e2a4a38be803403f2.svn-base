@@ -1,0 +1,46 @@
+package behaviors;
+
+import connect4.GameLogic;
+import connect4.MotorFunctions;
+import lejos.robotics.subsumption.Behavior;
+import sensors.TouchSensor;
+
+public class ReturnToStart implements Behavior {
+
+	private volatile boolean suppressed = false;
+	private MotorFunctions motorFunctions;
+	private TouchSensor startPositionButton;
+	private GameLogic gameLogic;
+	
+	public ReturnToStart(MotorFunctions motorFunctions, TouchSensor startPositionButton, GameLogic gameLogic) {
+		this.motorFunctions = motorFunctions;
+		this.startPositionButton = startPositionButton;
+		this.gameLogic = gameLogic;
+	}
+	
+	@Override
+	public boolean takeControl() {
+		return true;
+	}
+
+	@Override
+	public void action() {
+		
+		//Robotti liikkuu aloitusasemaan (x- siirtymä anturiin asti
+		int movementSpeed = 80;
+		while(!suppressed) {
+			motorFunctions.rotateMovementMotor(movementSpeed, true);
+			// TODO: tarkkaillaan nappulanpainallusta
+			motorFunctions.stopMovement();
+			// TODO: -> päivitetään gameLogic sijainti
+		}
+
+	}
+
+	@Override
+	public void suppress() {
+		suppressed = true;
+
+	}
+
+}

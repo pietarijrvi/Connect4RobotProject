@@ -2,6 +2,9 @@ package util;
 
 import java.io.Serializable;
 
+/**
+ * X and Y coordinates (x,y)
+ */
 public class Point implements Serializable {
 	public int x;
 	public int y;

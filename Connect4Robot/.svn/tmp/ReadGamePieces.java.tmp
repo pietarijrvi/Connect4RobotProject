@@ -1,7 +1,12 @@
 package behaviors;
 
+<<<<<<< .mine
 import java.awt.Point;
 
+||||||| .r105
+=======
+import connect4.GameLogic;
+>>>>>>> .r106
 import connect4.Movement;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
@@ -17,12 +22,23 @@ public class ReadGamePieces implements Behavior {
 	
 	private ColorTester colorCalibrator;
 	private Movement movement;
+	private GameLogic gameLogic;
 
+<<<<<<< .mine
 	public ReadGamePieces(ColorTester colorCalibrator, Movement movement, Port motorPort) {
+||||||| .r105
+=======
+	public ReadGamePieces(ColorTester colorCalibrator, Movement movement, GameLogic gameLogic) {
+>>>>>>> .r106
 		this.colorCalibrator = colorCalibrator;
 		this.movement = movement;
+<<<<<<< .mine
 		this.motor = new EV3MediumRegulatedMotor(motorPort);
 		motor.setSpeed(motorSpeed);
+||||||| .r105
+=======
+		this.gameLogic = gameLogic;
+>>>>>>> .r106
 	}
 
 	@Override

@@ -7,6 +7,11 @@ import lejos.robotics.subsumption.Behavior;
 import sensors.TouchSensor;
 import util.Point;
 
+/**
+ * Robot returns to the start location next to the game board. Robot moves until
+ * the touch sensor (signalling the correct location) is reached.
+ *
+ */
 public class ReturnToStart implements Behavior {
 
 	private volatile boolean suppressed = false;
@@ -14,48 +19,52 @@ public class ReturnToStart implements Behavior {
 	private TouchSensor startPositionButton;
 	private GameLogic gameLogic;
 	private Communication comm;
-	
-	public ReturnToStart(MotorFunctions motorFunctions, TouchSensor startPositionButton, GameLogic gameLogic, Communication comm) {
+
+	public ReturnToStart(MotorFunctions motorFunctions, TouchSensor startPositionButton, GameLogic gameLogic,
+			Communication comm) {
 		this.motorFunctions = motorFunctions;
 		this.startPositionButton = startPositionButton;
 		this.gameLogic = gameLogic;
 		this.comm = comm;
 	}
-	
+
+	/**
+	 * Taking control when the robot has dropped its game piece and finishing its
+	 * turn.
+	 */
 	@Override
 	public boolean takeControl() {
-		if(gameLogic.getIsRobotsTurn() && gameLogic.getHasDroppedPiece())
+		if (gameLogic.getHasDroppedPiece())
 			return true;
 		return false;
 	}
 
+	/**
+	 * The robot moves sideways until the touch sensor is reached. Turn changes from
+	 * the robot to the player when the sensor is reached.
+	 */
 	@Override
 	public void action() {
-		System.out.println("ReturnToStart started");
+
 		suppressed = false;
-		//Robotti liikkuu aloitusasemaan (x- siirtymä anturiin asti
 		int movementSpeed = 200;
-		while(!suppressed) {
+		while (!suppressed) {
 			motorFunctions.rotateMovementMotor(movementSpeed, false);
-			// TODO: tarkkaillaan nappulanpainallusta, thread
-			while(!startPositionButton.isButtonPressed());
-			gameLogic.setIsRobotsTurn(false);
-			gameLogic.setHasDroppedPiece(false);
-			
+			// monitoring the button (touch sensor) press
+			while (!startPositionButton.isButtonPressed())
+				;
 			motorFunctions.stopMovement();
 			System.out.println("Liikuttu aloituspisteeseen -1");
-			
-			// päivitetään gameLogic sijainti
-			gameLogic.setLocation(new Point(-1,gameLogic.getLocation().y));
-			
-			//TODO: poistetaan väliaikaiset testit
-			//	gameLogic.setCalculatedMove(new Point(2,3));
-			//	gameLogic.setIsRobotsTurn(true);
-			
-			// lähetetään tietokoneelle tieto vuoron vaihtumisesta pelaajalle
+
+			// updating the robot location
+			gameLogic.setLocation(new Point(-1, gameLogic.getLocation().y));
+
+			gameLogic.getHasDroppedPiece();
+
+			// communicating with the connected PC that the robot has finished its turn
 			comm.sendTurnChange();
-			
-			
+			gameLogic.setIsRobotsTurn(false);
+
 			suppressed = true;
 		}
 	}

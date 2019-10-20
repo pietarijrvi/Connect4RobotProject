@@ -54,28 +54,9 @@ public class Communication {
 		try {
 			in.readInt();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	
-	/**
-	 * Sends gameboard array to PC
-	 * 
-	 * @param gameBoardArray
-	 */
-	/*
-	public void sendGameboardArray(int[][] gameBoardArray) {
-		try {
-			oos.writeObject(gameBoardArray);
-			oos.flush();
-			System.out.println("Gameboard sent");
-		} catch (IOException e) {
-			System.out.println("Couldn't send gameboard");
-		}
-	}
-	*/
 	
 	/**
 	 * Receives point coordinates sent from the PC
@@ -87,36 +68,43 @@ public class Communication {
 		try {
 			point = (Point) oin.readObject();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return point;
 	}
 
-	
+	/**
+	 * Sends game piece point (player move) to the PC
+	 * 
+	 * @param point x- and y-coordinates
+	 */
 	public void sendDropPoint(Point point) {
 		try {
 			oos.writeObject(point);
 			oos.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Signalling the PC that the the turn has changed
+	 */
 	public void sendTurnChange() {
 		try {
 			out.writeBoolean(true);
 			out.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Listening for the turn change signal
+	 * @return
+	 */
 	public boolean receiveTurnChange() {
 		boolean turnChange = false;
 		try {

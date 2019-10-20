@@ -5,6 +5,12 @@ import connect4.GameLogic;
 import lejos.robotics.subsumption.Behavior;
 import util.Point;
 
+/**
+ * Behaviour that controls receiving messages from the connected PC. Robot
+ * starts listening for the calculated next move when it's robot's turn and
+ * saves the received coordinates.
+ *
+ */
 public class ReceiveRobotMove implements Behavior {
 
 	private Communication comm = new Communication();
@@ -15,27 +21,31 @@ public class ReceiveRobotMove implements Behavior {
 		this.comm = comm;
 	}
 
+	/**
+	 * Taking control when it's robot's turn and it hasn't received a drop point
+	 * yet. Top priority behaviour.
+	 */
 	@Override
 	public boolean takeControl() {
-		if (gameLogic.getIsRobotsTurn() && !gameLogic.getDropPointReceived() && gameLogic.getGameBoardReadComplete()) {
+		if (gameLogic.getIsRobotsTurn() && !gameLogic.getDropPointReceived()) {
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Listening for the calculated point and saving it. Action is performed just once
+	 * each turn.
+	 */
 	@Override
 	public void action() {
-		System.out.println("ReceiveRobotMove started");
 		Point p = comm.receiveDropPoint();
-		System.out.println("Move received - x:" + p.x + " y: "+p.y);
 		gameLogic.setCalculatedMove(p);
 		gameLogic.setDropPointReceived(true);
-		gameLogic.setGameBoardReadComplete(false);
 	}
 
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
 
 	}
 

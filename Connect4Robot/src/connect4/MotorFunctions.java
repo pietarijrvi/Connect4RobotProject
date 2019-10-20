@@ -5,8 +5,6 @@ import lejos.hardware.motor.BaseRegulatedMotor;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.Port;
-import lejos.robotics.RegulatedMotor;
-import lejos.utility.Delay;
 
 /**
  * Class that controls the motor functions; moving, turning and stopping the
@@ -16,9 +14,9 @@ import lejos.utility.Delay;
  *
  */
 public class MotorFunctions {
-	private BaseRegulatedMotor movementMotor;
+	private BaseRegulatedMotor movementMotor; // wheels / x-position
 	private BaseRegulatedMotor dispenserMotor;
-	private BaseRegulatedMotor colorSensorLifterMotor;
+	private BaseRegulatedMotor colorSensorLifterMotor; // color sensor y-position
 
 	private Port motorPort; // left motor port
 
@@ -28,10 +26,6 @@ public class MotorFunctions {
 		this.dispenserMotor = new EV3MediumRegulatedMotor(dispenserMotorPort);
 		this.colorSensorLifterMotor = new EV3MediumRegulatedMotor(colorSensorLifterMotorPort);
 	}
-	
-	public void rotateDegreesLifterMotor(int degrees) {
-		colorSensorLifterMotor.rotate(degrees, true);
-	}
 
 	public void rotateMovementMotor(int motorSpeed, boolean moveForwards) {
 		rotateMotor(movementMotor, motorSpeed, moveForwards);
@@ -39,14 +33,13 @@ public class MotorFunctions {
 
 	public void rotateDispenserMotor(int motorSpeed, boolean moveForwards) {
 		rotateMotor(dispenserMotor, motorSpeed, moveForwards);
-
 	}
-	
+
 	public void rotateLifterMotor(int motorSpeed, boolean moveForwards) {
 		rotateMotor(colorSensorLifterMotor, motorSpeed, moveForwards);
 	}
-	
-	private void rotateMotor(BaseRegulatedMotor motor,int motorSpeed, boolean moveForwards) {
+
+	private void rotateMotor(BaseRegulatedMotor motor, int motorSpeed, boolean moveForwards) {
 		motor.setSpeed(motorSpeed);
 		if (moveForwards) {
 			motor.forward();
@@ -54,20 +47,24 @@ public class MotorFunctions {
 			motor.backward();
 		}
 	}
-	
-	
 
 	/**
-	 * Stops motor
+	 * Stops movement motor (x-position / wheels)
 	 */
 	public void stopMovement() {
 		movementMotor.stop();
 	}
-	
+
+	/**
+	 * Stops the game piece dispenser motor
+	 */
 	public void stopDispenser() {
 		dispenserMotor.stop();
 	}
-	
+
+	/**
+	 * Stops the lifter motor (color sensor y-position)
+	 */
 	public void stopLifter() {
 		colorSensorLifterMotor.stop();
 	}

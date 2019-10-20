@@ -1,35 +1,37 @@
 package behaviors;
 
-import connect4.Communication;
 import connect4.GameLogic;
 import connect4.MotorFunctions;
 import connect4.PieceXYReadMove;
-import lejos.hardware.Sound;
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.motor.EV3MediumRegulatedMotor;
-import lejos.hardware.port.Port;
-import lejos.robotics.RegulatedMotor;
 import lejos.robotics.subsumption.Behavior;
-import lejos.utility.Delay;
 import sensors.ColorTester;
 import util.Point;
 
+/**
+ * Behaviour that controls reading the game pieces on the board (searching for
+ * the player piece). The robot reads the slots that were empty before the
+ * latest player move. The search finishes when the robot finds the piece. The
+ * robot uses a color sensor to update its position info (color changes) and
+ * recognising the player piece.
+ *
+ */
 public class ReadGamePieces implements Behavior {
 
 	private volatile boolean suppressed = false;
-	
 
-	private ColorTester colorTester;
+	private MotorFunctions motorFunctions;
 	private GameLogic gameLogic;
 	private PieceXYReadMove pieceXYReadMove;
-	private Communication comm = new Communication();
 
-	public ReadGamePieces(PieceXYReadMove pieceXYReadMove, GameLogic gameLogic, Communication comm) {
+	public ReadGamePieces(PieceXYReadMove pieceXYReadMove, GameLogic gameLogic) {
 		this.pieceXYReadMove = pieceXYReadMove;
 		this.gameLogic = gameLogic;
-		this.comm = comm;
 	}
 
+	/**
+	 * Taking control when it's robot's turn, the robot is waiting in the start
+	 * location and the robot hasn't read the game board yet.
+	 */
 	@Override
 	public boolean takeControl() {
 		// otetaan kontrolli, kun robotin vuoro ja laudan luku kesken (pelattu nappula
@@ -40,40 +42,40 @@ public class ReadGamePieces implements Behavior {
 		return false;
 	}
 
+	/**
+	 * Retrieves the game board information (empty slots) and current position from
+	 * the game logic. Continues searching until the player piece has been found and
+	 * saves the piece coordinates to the game logic game board.
+	 */
 	@Override
 	public void action() {
-		System.out.println("ReadGamePieces started");
-		suppressed = false;
 		while (!suppressed) {
 
 			boolean newPieceFound = false;
-			while(!newPieceFound) {
-				// haetaan tieto stepeistä seuraavaan tyhjään slottiin (gameLogic)
+
+			while (!newPieceFound) {
+				// retrieving the x- and y-movement steps to the next empty slot
 				Point stepsToNextEmpty = gameLogic.stepsToNextEmpty();
 
-				// siirrytään seuraavan edellisellä vuorolla tyhjänä olleeseen kohtaan, lopetetaan haku, kun löytyy pelattu nappula
 				int destinationColor = pieceXYReadMove.moveSensor(stepsToNextEmpty);
-				//gameLogic.locationChange(stepsToNextEmpty);
-				if(destinationColor == ColorTester.COLOR_PLAYERPIECE||destinationColor == ColorTester.COLOR_ROBOTPIECE) {
-					newPieceFound = true; //lopetetaan haku, kun kohdepisteessä nappula
-					//ilmoitetaan löydetty nappula ja sijainti gameLogicille, muuten jatketaan hakemalla uusi kohde
+				if (destinationColor == ColorTester.COLOR_PLAYERPIECE
+						|| destinationColor == ColorTester.COLOR_ROBOTPIECE) {
+					newPieceFound = true;
 					gameLogic.setPieceToCurrentLocation(destinationColor);
-					Point currentLocation = gameLogic.getLocation();
-
 					gameLogic.setGameBoardReadComplete(true);
-					comm.sendDropPoint(currentLocation);
-					gameLogic.setDropPointReceived(false);
 					suppressed = true;
 				}
 			}
 		}
 	}
 
+	/**
+	 * Lifter motor (color sensor y-position) stops when the action is suppressed
+	 */
 	@Override
 	public void suppress() {
+		motorFunctions.stopLifter();
 		suppressed = true;
 	}
-
-	
 
 }
