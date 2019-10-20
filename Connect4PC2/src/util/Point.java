@@ -2,6 +2,9 @@ package util;
 
 import java.io.Serializable;
 
+/**
+ * Coordinates for gamepieces
+ */
 public class Point implements Serializable {
 	public int x;
 	public int y;
