@@ -13,6 +13,9 @@ import model.CommunicatorTask;
 import model.Determinator;
 import util.Point;
 
+/**
+ * @author Pietari Järvi, Kim Widberg, Olli Kaivola, Jetro Saarti
+ */
 public class GameOverviewController {
 
 	private int turnNumber;
@@ -55,6 +58,10 @@ public class GameOverviewController {
 	}
 
 	
+	/**
+	 * Adds players gamepiece to the UI board
+	 * @param point
+	 */
 	public void addPlayerPiece(Point point) {
 		int x = point.x;
 		int y = point.y;
@@ -72,6 +79,10 @@ public class GameOverviewController {
 		turnNumber++;
 	}
 	
+	/**
+	 * Adds robots gamepiece to the UI board
+	 * @param point
+	 */
 	public void addRobotPiece(Point point) {
 		int x = point.x;
 		int y = point.y;
@@ -88,13 +99,19 @@ public class GameOverviewController {
 		turnNumber++;
 	}
 	
-
+	
+	/**
+	 * Sends turn change command to the robot when button is pressed
+	 */
 	@FXML
 	private void changeTurn() {
 		comm.sendTurnChange();
 		currentTurn.setText("Robot");
 	}
 
+	/**
+	 * Resets the game UI
+	 */
 	@FXML
 	private void reset() {
 		Node node = pane.getChildren().get(0);
@@ -102,9 +119,5 @@ public class GameOverviewController {
 		pane.getChildren().add(0, node);
 		turnNumber = 0;
 		turns.setText("" + turnNumber);
-	}
-
-	public void setMainApp(Main main) {
-
 	}
 }
