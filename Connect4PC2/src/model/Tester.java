@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 import util.Point;
 
+/**
+ * @author Kim Widberg, Jetro Saarti, Pietari Järvi, Olli Kaivola
+ */
 public class Tester {
 
 	static Board board = new Board();
@@ -54,6 +57,10 @@ public class Tester {
 		
 		
 	}
+	
+	/**
+	 * Checks for wins on the board
+	 */
 	public void testCheckWins() {
 		Board game = new Board();
 		Determinator det = new Determinator(game, 1, 2);
@@ -67,6 +74,9 @@ public class Tester {
 		System.out.println(det.checkWins());
 	}
 	
+	/**
+	 * Prints the current board into console
+	 */
 	public static void printBoard(Board board) {
 		int[][] grid = board.getGrid();
 		for (int y = 5; y >= 0; y--) {
