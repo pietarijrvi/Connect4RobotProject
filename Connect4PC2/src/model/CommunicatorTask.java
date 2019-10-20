@@ -30,11 +30,14 @@ public class CommunicatorTask extends Task<Void> {
 		determinator = new Determinator(board, robotNumber, playerNumber);
 	}
 
+	/**
+	 * Executes in-application communication with the robot and the PC
+	 */
 	@Override
 	protected Void call() throws Exception {
 
 		while (gameRunning) {
-			System.out.println("kuunnellaan vuoron va");
+			System.out.println("Listening to turn change");
 			communicationPC.receiveTurnChange();
 			System.out.println("Turn change received");
 			Point p = communicationPC.receiveDropPoint();
@@ -67,7 +70,10 @@ public class CommunicatorTask extends Task<Void> {
 		communicationPC.closeConnection();
 		return null;
 	}
-
+	
+	/**
+	 * Checks if the gameboard has a win
+	 */
 	private void checkWinner() {
 		int winner = determinator.checkWins();
 		if (winner == 1) {
