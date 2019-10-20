@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 
 /**
  * 
- * @author Pietari Järvi, Jetro Saarti, Kim Widberg, Olli Kaivola
+ * @author Pietari JÃ¤rvi, Jetro Saarti, Kim Widberg, Olli Kaivola
  *
  */
 public class CommunicationPC {
@@ -48,7 +48,11 @@ public class CommunicationPC {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Receives turnChange boolean and checks if turn has been changed
+	 * @return turnChange;
+	 */
 	public boolean receiveTurnChange() {
 		boolean turnChange = false;
 		try {
@@ -59,6 +63,9 @@ public class CommunicationPC {
 		return turnChange;
 	}
 	
+	/**
+	 * Sends boolean turnChange as true when turn changed
+	 */
 	public void sendTurnChange() {
 		try {
 			out.writeBoolean(true);
@@ -85,6 +92,10 @@ public class CommunicationPC {
 		}
 	}
 	
+	/**
+	 * Receive drop point object from the robot
+	 * @return point
+	 */
 	public Point receiveDropPoint() {
 		Point point = new Point(0, 0);
 		try {

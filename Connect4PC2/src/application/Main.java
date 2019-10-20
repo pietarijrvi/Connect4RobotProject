@@ -11,10 +11,16 @@ import javafx.stage.Stage;
 import model.CommunicatorTask;
 import view.GameOverviewController;
 
+/**
+ * @author Pietari Järvi, Jetro Saarti, Kim Widberg, Olli Kaivola
+ */
 public class Main extends Application {
 	private Stage primaryStage;
 	private AnchorPane gameOverview;
-
+	
+	/**
+	 * Runs the application and sets the stage
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -23,7 +29,10 @@ public class Main extends Application {
 		primaryStage.setMinHeight(850);
 		showGameOverview();
 	}
-
+	
+	/**
+	 * Sets the game UI to the stage
+	 */
 	public void showGameOverview() {
 		try {
 			// Load layout from fxml file.
